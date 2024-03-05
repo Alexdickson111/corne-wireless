@@ -19,19 +19,19 @@
             0x00 0x00 0x00 0x18 // Alt + R
             0x00 0x00 0x00 0x19 // Alt + U
         >;
+
         macro-conditions = <
             0x00 0x00 0x00 0x18 0x00 // Alt + R followed by Alt + Q, Alt + W, Alt + E, Alt + U
             0x00 0x00 0x00 0x17 0x00 // Alt + E followed by Alt + R
         >;
+
         macros-map = <
             0x00 0x00 0x00 0x18 0x00 0x00 0x00 0x00 0x13 // Alt + R macro
             0x00 0x00 0x00 0x17 0x00 0x00 0x00 0x00 0x12 // Alt + E macro
         >;
     };
 
-    keyboard: keyboard {
-        zmk_macros = <&zmk_macro>;
-    };
+    keyboard: keyboard { zmk_macros = <&zmk_macro>; };
 };
 
 / {
@@ -50,13 +50,8 @@
     combos {
         compatible = "zmk,combos";
 
-        demon_mode_terminal {
-            bindings = <&kt RA(R)>;
-            key-positions = <38 39 35>;
-        };
-
         demon_mode_browser {
-            bindings = <&kp RA(E)>;
+            bindings = <&kp RA(R)>;
             key-positions = <38 39>;
         };
     };
