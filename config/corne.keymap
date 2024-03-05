@@ -9,7 +9,6 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/keys.h>
 
-
 / {
     behaviors {
         balanced_hold_tap: balanced_hold_tap {
@@ -20,6 +19,30 @@
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             flavor = "balanced";
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        demon_mode_terminal {
+            bindings = <&kt RA(R)>;
+            key-positions = <38 39 35>;
+        };
+
+        demon_mode_browser {
+            bindings = <&kp RA(E)>;
+            key-positions = <38 39>;
+        };
+    };
+
+    macros {
+        demon_mode: demon_mode {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&none>, <&macro_press>;
+
+            label = "DEMON_MODE";
         };
     };
 
