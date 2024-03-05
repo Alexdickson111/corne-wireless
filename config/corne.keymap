@@ -8,6 +8,118 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/keys.h>
+#include <zmk/event_manager.h>
+#include <zmk/keymap.h>
+
+// Define a custom state variable to track key presses.
+bool alt_q_pressed = false;
+bool alt_w_pressed = false;
+bool alt_e_pressed = false;
+bool alt_u_pressed = false;
+bool alt_r_pressed = false;
+
+// Event handler for key presses.
+ZMK_LISTENER(key_press_listener, post_keypress) {
+    const struct zmk_key_event *key_event = zmk_key_event_from_encoded(record->pressed);
+
+    switch (key_event->key) {
+        case KC_LALT:
+        case KC_RALT:
+            // Update the state variables based on which Alt key is pressed.
+            switch (key_event->position) {
+                case ZMK_KEY_POSITION_PRESSED:
+                    switch (key_event->usage) {
+                        case HID_USAGE_KEY_Q:
+                            alt_q_pressed = true;
+                            break;
+                        case HID_USAGE_KEY_W:
+                            alt_w_pressed = true;
+                            break;
+                        case HID_USAGE_KEY_E:
+                            alt_e_pressed = true;
+                            break;
+                        case HID_USAGE_KEY_U:
+                            alt_u_pressed = true;
+                            break;
+                        case HID_USAGE_KEY_R:
+                            alt_r_pressed = true;
+                            break;
+                    }
+                    break;
+            }
+            break;
+    }
+}
+
+// Event handler for key releases.
+ZMK_LISTENER(key_release_listener, post_keyrelease) {
+    const struct zmk_key_event *key_event = zmk_key_event_from_encoded(record->pressed);
+
+    switch (key_event->key) {
+        case KC_LALT:
+        case KC_RALT:
+            // Update the state variables when Alt key is released.
+            switch (key_event->usage) {
+                case HID_USAGE_KEY_Q:
+                    alt_q_pressed = false;
+                    break;
+                case HID_USAGE_KEY_W:
+                    alt_w_pressed = false;
+                    break;
+                case HID_USAGE_KEY_E:
+                    alt_e_pressed = false;
+                    break;
+                case HID_USAGE_KEY_U:
+                    alt_u_pressed = false;
+                    break;
+                case HID_USAGE_KEY_R:
+                    alt_r_pressed = false;
+                    break;
+            }
+            break;
+    }
+}
+
+// Define the macro behavior based on the state of the keys.
+ZMK_MACRO(zmk_macro_alt_r_or_e) {
+    if (alt_q_pressed || alt_w_pressed || alt_e_pressed || alt_u_pressed) {
+        return MACRO(T(LALT), T(R));
+    } else if (alt_r_pressed) {
+        return MACRO(T(LALT), T(E));
+    } else {
+        return MACRO_NONE;
+    }
+}
+
+ZMK_LISTENER(key_event_listener, key_event) {
+    // Dispatch key events to the key press and release event handlers.
+    RUN_AFTER_POST_LISTENERS(key_press_listener, post_key_event);
+    RUN_AFTER_POST_LISTENERS(key_release_listener, post_key_event);
+}
+
+ZMK_LISTENER(macro_recording_end_listener, zmk_macro_recording_end) {
+    // Execute the macro when recording ends.
+    zmk_macro_record_execute(zmk_macro_alt_r_or_e);
+}
+
+ZMK_LISTENER(macro_reset_listener, zmk_macro_reset) {
+    // Reset the state variables when macro is reset.
+    alt_q_pressed = false;
+    alt_w_pressed = false;
+    alt_e_pressed = false;
+    alt_u_pressed = false;
+    alt_r_pressed = false;
+}
+
+ZMK_LISTENER(event_manager_listener, post_event_manager_initialized) {
+    // Register event listeners.
+    zmk_register_post_key_event_listener(key_event_listener);
+    zmk_register_zmk_macro_recording_end_listener(macro_recording_end_listener);
+    zmk_register_zmk_macro_reset_listener(macro_reset_listener);
+}
+
+ZMK_LISTENER_INIT(event_manager_listener, post_event_manager_initialized);
+
 
 / {
     behaviors {
