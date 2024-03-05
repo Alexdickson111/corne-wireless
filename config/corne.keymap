@@ -10,6 +10,31 @@
 #include <dt-bindings/zmk/keys.h>
 
 / {
+    zmk_macro: zmk_macro {
+        compatible = "zmk,macros";
+        macros = <
+            0x00 0x00 0x00 0x15 // Alt + Q
+            0x00 0x00 0x00 0x16 // Alt + W
+            0x00 0x00 0x00 0x17 // Alt + E
+            0x00 0x00 0x00 0x18 // Alt + R
+            0x00 0x00 0x00 0x19 // Alt + U
+        >;
+        macro-conditions = <
+            0x00 0x00 0x00 0x18 0x00 // Alt + R followed by Alt + Q, Alt + W, Alt + E, Alt + U
+            0x00 0x00 0x00 0x17 0x00 // Alt + E followed by Alt + R
+        >;
+        macros-map = <
+            0x00 0x00 0x00 0x18 0x00 0x00 0x00 0x00 0x13 // Alt + R macro
+            0x00 0x00 0x00 0x17 0x00 0x00 0x00 0x00 0x12 // Alt + E macro
+        >;
+    };
+
+    keyboard: keyboard {
+        zmk_macros = <&zmk_macro>;
+    };
+};
+
+/ {
     behaviors {
         balanced_hold_tap: balanced_hold_tap {
             compatible = "zmk,behavior-hold-tap";
