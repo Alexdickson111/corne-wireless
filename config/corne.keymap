@@ -26,7 +26,7 @@
         compatible = "zmk,combos";
 
         demon_mode_browser {
-            bindings = <&kp RA(g)>;
+            bindings = <&kp RA(G)>;
             key-positions = <38 39>;
         };
     };
