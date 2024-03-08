@@ -29,6 +29,20 @@
             bindings = <&kp RA(G)>;
             key-positions = <38 39>;
         };
+
+        sex {
+            bindings = <&sex>;
+            key-positions = <37 40>;
+        };
+    };
+
+    macros {
+        sex: sex {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp SPACE &kp G &kp G &kp SLASH>;
+            label = "SEX";
+        };
     };
 
     keymap {
